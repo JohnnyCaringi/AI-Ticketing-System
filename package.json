@@ -1,5 +1,10 @@
 {
   "dependencies": {
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.4.5",
+    "fs": "^0.0.1-security",
+    "mongod": "^2.0.0",
+    "mongodb": "^6.9.0",
     "node-nlp": "^4.27.0"
   }
 }
