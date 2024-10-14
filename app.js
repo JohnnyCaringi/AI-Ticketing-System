@@ -4,7 +4,7 @@ const { MongoClient } = require("mongodb");
 
 const uri = process.env.MONGO_URI;
 
-
+// Load Database
 const client = new MongoClient(uri);
 async function run() {
     try {
@@ -15,6 +15,7 @@ async function run() {
         return ticket;
         //console.log(ticket);
       } finally {
+        // Ensures that the client will close when you finish/error
         await client.close();
       }
 }
@@ -25,8 +26,8 @@ run().then(tickets => {
 
 
 
-//Train Model
-// Always classify a document even if teh model is unsure
+// Train Model
+// Always classify a document even if the model is unsure
 const manager = new NlpManager({ languages: ['en'], nlu: { useNoneFeature: false } });
 
 // Adds the utterances and intents for the NLP
@@ -40,7 +41,7 @@ manager.addDocument('en', 'hi', 'greetings.hello');
 manager.addDocument('en', 'howdy', 'greetings.hello');
 
 
-// Train also the NLG
+
 manager.addAnswer('en', 'greetings.bye', 'Till next time');
 manager.addAnswer('en', 'greetings.bye', 'see you soon!');
 manager.addAnswer('en', 'greetings.hello', 'Hey there!');
