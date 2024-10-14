@@ -4,18 +4,17 @@ const { MongoClient } = require("mongodb");
 
 const uri = process.env.MONGO_URI;
 
-//Load Database
+
 const client = new MongoClient(uri);
 async function run() {
     try {
         const database = client.db('ai-project');
         const tickets = database.collection('tickets');
-        // Query for a movie that has the title 'Back to the Future'
+        
         let ticket = await tickets.find({}).toArray();
         return ticket;
         //console.log(ticket);
       } finally {
-        // Ensures that the client will close when you finish/error
         await client.close();
       }
 }
