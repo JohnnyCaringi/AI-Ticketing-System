@@ -1,10 +1,19 @@
+const express = require('express');
+var bodyParser = require('body-parser');
+const { urlencoded } = require('body-parser')
+const path = require('path');
 const { NlpManager } = require('node-nlp');
-const { ObjectId } = require('mongodb')
+const { ObjectId } = require('mongodb');
 const { MongoClient } = require("mongodb");
 
+
+const app = express();
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
 const uri = process.env.MONGO_URI;
 //Load Database
 const client = new MongoClient(uri);
+AIresult = "";
 
 async function loadTickets() {
     try {
@@ -21,9 +30,41 @@ async function loadTickets() {
       }
 }
 
+async function classifyPriority(ticketText){
+  // Train Model
+  const manager = new NlpManager({ languages: ['en'], nlu: { log: false } });
+
+  queues = [];
+
+  // Loop through all tickets and add them to the model
+  loadTickets().then(tickets => {
+    for (let i = 0; i < tickets.length; i++){
+      manager.addDocument(tickets[i].language, tickets[i].subject + " " + tickets[i].text, tickets[i].priority);
+
+      // Allows for more priorities to be added in the future (if that's something you really want)
+      if(!queues.includes(tickets[i].priority)){
+        queues.push(tickets[i].priority);
+      }
+    }
+
+    // Tell the model how to respond
+    for (let i = 0; i < queues.length; i++){
+      manager.addAnswer('en', queues[i], queues[i]);
+    }
+
+    // Train the model
+    (async() => {
+      await manager.train();
+      manager.save();
+      const response = await manager.process('en', ticketText);
+      //return response.answer;
+      console.log(response.answer);
+    })();
+  });
+}
+
 async function classifyQueue(ticketText){
   // Train Model
-  // Always classify a document even if teh model is unsure
   const manager = new NlpManager({ languages: ['en'], nlu: { log: false } });
 
   queues = [];
@@ -41,7 +82,7 @@ async function classifyQueue(ticketText){
 
     // Tell the model how to respond
     for (let i = 0; i < queues.length; i++){
-      manager.addAnswer('en', queues[i], queues[i])
+      manager.addAnswer('en', queues[i], queues[i]);
     }
 
     // Train the model
@@ -50,10 +91,26 @@ async function classifyQueue(ticketText){
       manager.save();
       const response = await manager.process('en', ticketText);
       //return response.answer;
-      console.log(response);
+      console.log(response.answer);
     })();
   });
 }
 
-classifyQueue("My photoshop keeps crashing even after I reinstall");
 
+app.get("/", function (req, res) {
+  res.render("index", {
+    result: AIresult
+  })
+});
+
+app.post("/submitTicket/", function (req, res) {
+  let ticketText = req.body.ticketText;
+});
+
+ticket = "My mouse is broken and the laser wont turn on."
+classifyPriority(ticket);
+classifyQueue(ticket);
+/*
+*/
+
+app.listen(8000);

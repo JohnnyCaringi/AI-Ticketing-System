@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Ticket thingy</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+    </head>
+
+    <body>
+        <header>
+            <h1>Enter your ticket:</h1>
+        </header>
+
+        <div class="container-fluid">
+            <form id="ticketForm" method="POST" action="/submitTicket/">
+                <br>
+                <textarea id="ticketText" name="ticketText" rows="5" cols="30"></textarea>
+                <input type="submit" id="submit" value="Submit Ticket">
+            </form>
+        </div>
+
+        <div class="container-fluid text-center col-sm-6">
+            <br><br><br>
+            <h2 id="animalTitle"></h2>
+            <br>
+            <p id="animalDesc"></p>
+        </div>
+
+
+
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js'></script>
+        <script src="/scripts/script.js"></script>
+    </body>
+
+</html>
