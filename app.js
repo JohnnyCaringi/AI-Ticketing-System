@@ -11,58 +11,61 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 const uri = process.env.MONGO_URI;
+
 //Load Database
 const client = new MongoClient(uri);
-AIresult = "";
+const database = client.db('ai-project');
+const tickets = database.collection('tickets');
 
-async function loadTickets() {
-    try {
-        const database = client.db('ai-project');
-        const tickets = database.collection('tickets');
-        
-        let ticket = await tickets.find({}).toArray();
 
-        return ticket;
-        //console.log(ticket);
-      } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-      }
+//Name: loadTickets
+//Description: Loads all ticket database entires into an array
+//Return Value: Array of tickets
+//Parameters: N/A
+async function loadTickets(){
+  let ticket = await tickets.find({}).toArray();
+
+  return ticket;
 }
 
+//Name: classifyPriority
+//Description: Assigns a priority to a ticket using the ticket's text
+//Return Value: Priority as a string
+//Parameters: The ticket's text
 async function classifyPriority(ticketText){
   // Train Model
   const manager = new NlpManager({ languages: ['en'], nlu: { log: false } });
 
-  queues = [];
+  priorities = [];
 
   // Loop through all tickets and add them to the model
-  loadTickets().then(tickets => {
-    for (let i = 0; i < tickets.length; i++){
-      manager.addDocument(tickets[i].language, tickets[i].subject + " " + tickets[i].text, tickets[i].priority);
+  let tickets = await loadTickets();
 
-      // Allows for more priorities to be added in the future (if that's something you really want)
-      if(!queues.includes(tickets[i].priority)){
-        queues.push(tickets[i].priority);
-      }
+  for (let i = 0; i < tickets.length; i++){
+    manager.addDocument(tickets[i].language, tickets[i].subject + " " + tickets[i].text, tickets[i].priority);
+    // Allows for more priorities to be added in the future (If you want that for some reason)
+    if(!priorities.includes(tickets[i].priority)){
+      priorities.push(tickets[i].priority);
     }
+  }
 
-    // Tell the model how to respond
-    for (let i = 0; i < queues.length; i++){
-      manager.addAnswer('en', queues[i], queues[i]);
-    }
+  // Tell the model how to respond
+  for (let i = 0; i < priorities.length; i++){
+    manager.addAnswer('en', priorities[i], priorities[i]);
+  }
 
-    // Train the model
-    (async() => {
-      await manager.train();
-      manager.save();
-      const response = await manager.process('en', ticketText);
-      //return response.answer;
-      console.log(response.answer);
-    })();
-  });
+  // Train the model
+  await manager.train();
+  manager.save();
+  const response = await manager.process('en', ticketText);
+
+  return response.answer;
 }
 
+//Name: classifyQueue
+//Description: Assigns a queue to a ticket using the ticket's text
+//Return Value: Queue as a string
+//Parameters: The ticket's text
 async function classifyQueue(ticketText){
   // Train Model
   const manager = new NlpManager({ languages: ['en'], nlu: { log: false } });
@@ -70,47 +73,55 @@ async function classifyQueue(ticketText){
   queues = [];
 
   // Loop through all tickets and add them to the model
-  loadTickets().then(tickets => {
-    for (let i = 0; i < tickets.length; i++){
-      manager.addDocument(tickets[i].language, tickets[i].subject + " " + tickets[i].text, tickets[i].queue);
+  let tickets = await loadTickets();
 
-      // Allows for more queues to be added in the future
-      if(!queues.includes(tickets[i].queue)){
-        queues.push(tickets[i].queue);
-      }
+  for (let i = 0; i < tickets.length; i++){
+    manager.addDocument(tickets[i].language, tickets[i].subject + " " + tickets[i].text, tickets[i].queue);
+
+    // Allows for more queues to be added in the future
+    if(!queues.includes(tickets[i].queue)){
+      queues.push(tickets[i].queue);
     }
+  }
 
-    // Tell the model how to respond
-    for (let i = 0; i < queues.length; i++){
-      manager.addAnswer('en', queues[i], queues[i]);
-    }
+  // Tell the model how to respond
+  for (let i = 0; i < queues.length; i++){
+    manager.addAnswer('en', queues[i], queues[i]);
+  }
 
-    // Train the model
-    (async() => {
-      await manager.train();
-      manager.save();
-      const response = await manager.process('en', ticketText);
-      //return response.answer;
-      console.log(response.answer);
-    })();
-  });
+  // Train the model
+  await manager.train();
+  manager.save();
+  const response = await manager.process('en', ticketText);
+
+  return response.answer;
+}
+
+//Name: processTicket
+//Description: Assigns a queue and priority to a ticket using the ticket's text
+//Return Value: String showing results
+//Parameters: The ticket's text
+async function processTicket(ticketText){
+    let queue = await classifyQueue(ticketText);
+    let priority = await classifyPriority(ticketText);
+    return "Queue: " + queue + " | Priority: " + priority;
 }
 
 
+// Web Functions
 app.get("/", function (req, res) {
   res.render("index", {
-    result: AIresult
-  })
+  });
 });
 
 app.post("/submitTicket/", function (req, res) {
   let ticketText = req.body.ticketText;
+  processTicket(ticketText).then(AIresult => {
+    res.render("index", {
+      result: AIresult
+    });
+  });
 });
 
-ticket = "My mouse is broken and the laser wont turn on."
-classifyPriority(ticket);
-classifyQueue(ticket);
-/*
-*/
 
 app.listen(8000);
