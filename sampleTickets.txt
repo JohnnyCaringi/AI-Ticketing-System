@@ -1,0 +1,20 @@
+=Sample Hardware Issue=
+
+NFC tag won't work
+
+Good morning,
+I just received my NFC tag to enter the building but it doesn't scan. Do you think you could help me before the work day is over?
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+=Sample Software Issue=
+
+URGENT: Photoshop crashing
+
+Dear Support Team, Photoshop crashes unexpectedly whenever I try to export a photo. This is very urgent to me as I have a strict project deadline to meet and my job may be at risk. Could you help me fix this as soon as possible?
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+=Completely Unexpected Issue=
+
+Broken laptop
+
+I accidentally dropped my laptop in the bathtub while working and I think it is broken. Is there a way to fix this or can I have a new laptop? I need a working laptop to get any work done.

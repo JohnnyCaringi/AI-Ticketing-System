@@ -97,6 +97,76 @@ async function classifyQueue(ticketText){
   return response.answer;
 }
 
+//Name: classifyHardwareUsed
+//Description: Assigns a hardware type to a ticket using the ticket's text
+//Return Value: Hardware type as a string
+//Parameters: The ticket's text
+async function classifyHardwareUsed(ticketText){
+  // Train Model
+  const manager = new NlpManager({ languages: ['en'], nlu: { log: false } });
+
+  hardwareTypes = [];
+
+  // Loop through all tickets and add them to the model
+  let tickets = await loadTickets();
+
+  for (let i = 0; i < tickets.length; i++){
+    manager.addDocument(tickets[i].language, tickets[i].subject + " " + tickets[i].text, tickets[i].hardware_used);
+
+    // Allows for more types of hardware to be added in the future
+    if(!hardwareTypes.includes(tickets[i].hardware_used)){
+      hardwareTypes.push(tickets[i].hardware_used);
+    }
+  }
+
+  // Tell the model how to respond
+  for (let i = 0; i < hardwareTypes.length; i++){
+    manager.addAnswer('en', hardwareTypes[i], hardwareTypes[i]);
+  }
+
+  // Train the model
+  await manager.train();
+  manager.save();
+  const response = await manager.process('en', ticketText);
+
+  return response.answer;
+}
+
+//Name: classifySoftwareUsed
+//Description: Assigns a software type to a ticket using the ticket's text
+//Return Value: Software type as a string
+//Parameters: The ticket's text
+async function classifySoftwareUsed(ticketText){
+  // Train Model
+  const manager = new NlpManager({ languages: ['en'], nlu: { log: false } });
+
+  softwareTypes = [];
+
+  // Loop through all tickets and add them to the model
+  let tickets = await loadTickets();
+
+  for (let i = 0; i < tickets.length; i++){
+    manager.addDocument(tickets[i].language, tickets[i].subject + " " + tickets[i].text, tickets[i].software_used);
+
+    // Allows for more types of hardware to be added in the future
+    if(!softwareTypes.includes(tickets[i].software_used)){
+      softwareTypes.push(tickets[i].software_used);
+    }
+  }
+
+  // Tell the model how to respond
+  for (let i = 0; i < softwareTypes.length; i++){
+    manager.addAnswer('en', softwareTypes[i], softwareTypes[i]);
+  }
+
+  // Train the model
+  await manager.train();
+  manager.save();
+  const response = await manager.process('en', ticketText);
+
+  return response.answer;
+}
+
 //Name: processTicket
 //Description: Assigns a queue and priority to a ticket using the ticket's text
 //Return Value: String showing results
@@ -104,7 +174,17 @@ async function classifyQueue(ticketText){
 async function processTicket(ticketText){
     let queue = await classifyQueue(ticketText);
     let priority = await classifyPriority(ticketText);
-    return "Queue: " + queue + " | Priority: " + priority;
+    if (queue == "Hardware"){
+      let hardwareUsed = await classifyHardwareUsed(ticketText);
+      return "Queue: " + queue  + " | Hardware Type: " + hardwareUsed + " | Priority: " + priority;
+    }
+    else if (queue == "Software"){
+      let softwareUsed = await classifySoftwareUsed(ticketText);
+      return "Queue: " + queue  + " | Software Type: " + softwareUsed + " | Priority: " + priority;
+    }
+    else{
+      return "Queue: " + queue + " | Priority: " + priority;
+    }
 }
 
 
