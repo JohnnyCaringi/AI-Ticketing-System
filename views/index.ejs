@@ -16,7 +16,12 @@
         <div class="container-fluid">
             <form id="ticketForm" method="POST" action="/submitTicket/">
                 <br>
-                <textarea id="ticketText" name="ticketText" rows="5" cols="30"></textarea>
+                <label for="email">Email:</label><br>
+                <input type="text" id="email" name="email"><br>
+                <label for="subject">Ticket Subject:</label><br>
+                <input type="text" id="subject" name="subject"><br>
+                <label for="body">Ticket Body:</label><br>
+                <textarea id="body" name="body" rows="5" cols="30"></textarea>
                 <input type="submit" id="submit" value="Submit Ticket">
             </form>
         </div>

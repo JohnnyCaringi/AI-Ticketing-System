@@ -27,6 +27,24 @@ async function loadTickets(){
   return ticket;
 }
 
+//Name: insertTicket
+//Description: Saves a new ticket to a database
+//Return Value: N/A
+//Parameters: Ticket subject, description, priority,
+//            category, and email
+async function insertTicket(subject, body, priority, category, creationTime, email){
+  let newTicket = {
+    subject: subject,
+    description: body,
+    priority: priority,
+    category: category,
+    createdAt: creationTime,
+    requesterEmail: email
+  };
+
+  await tickets.insertOne(newTicket);
+}
+
 //Name: classifyCategory
 //Description: Assigns a category to a ticket using the ticket's text
 //Return Value: Category as a string
@@ -55,7 +73,12 @@ async function classifyCategory(ticketText, allTickets){
   manager.save();
   const response = await manager.process('en', ticketText);
 
-  return response.answer;
+  if(response.answer != undefined){
+    return response.answer;
+  }
+  else{
+    return "";
+  }
 }
 
 //Name: classifyPriority
@@ -86,18 +109,23 @@ async function classifyPriority(ticketText, allTickets){
   manager.save();
   const response = await manager.process('en', ticketText);
 
-  return response.answer;
+  if(response.answer != undefined){
+    return response.answer;
+  }
+  else{
+    return "";
+  }
 }
 
 //Name: processTicket
 //Description: Assigns a queue and priority to a ticket using the ticket's text
-//Return Value: String showing results
+//Return Value: Array with category and priority
 //Parameters: The ticket's text
 async function processTicket(ticketText){
   let tickets = await loadTickets();
   let category = await classifyCategory(ticketText, tickets);
   let priority = await classifyPriority(ticketText, tickets);
-  return category + " " + priority;
+  return [category, priority];
 }
 
 // Web Functions
@@ -107,12 +135,23 @@ app.get("/", function (req, res) {
 });
 
 app.post("/submitTicket/", function (req, res) {
-  let ticketText = req.body.ticketText;
-  processTicket(ticketText).then(AIresult => {
+  let subject = req.body.subject;
+  let body = req.body.body;
+  let email = req.body.email;
+  let ticketText = subject + " " + body;
+  let creationTime = new Date();
+
+
+  (async()=>{
+    AIresults = await processTicket(ticketText);
+    let category = AIresults[0];
+    let priority = AIresults[1];
+    await insertTicket(subject, body, priority, category, creationTime, email);
+
     res.render("index", {
-      result: AIresult
+      result: AIresults[0] + " | " + AIresults[1]
     });
-  });
+  })();
 });
 
 
