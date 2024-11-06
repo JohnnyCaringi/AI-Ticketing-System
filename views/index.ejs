@@ -6,29 +6,39 @@
         <title>Ticket thingy</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+        <link rel="stylesheet" href="/styles/styles.css">
     </head>
 
     <body>
         <header>
-            <h1>Enter your ticket:</h1>
+            <h1>Tickets:</h1>
         </header>
 
-        <div class="container-fluid">
-            <form id="ticketForm" method="POST" action="/submitTicket/">
-                <br>
-                <label for="email">Email:</label><br>
-                <input type="text" id="email" name="email"><br>
-                <label for="subject">Ticket Subject:</label><br>
-                <input type="text" id="subject" name="subject"><br>
-                <label for="body">Ticket Body:</label><br>
-                <textarea id="body" name="body" rows="5" cols="30"></textarea>
-                <input type="submit" id="submit" value="Submit Ticket">
-            </form>
+        <div class="container-fluid row">
+            <div class="col-4 tickets">
+                <% for (var i=0; i< tickets.length; i++ ) { %>
+                <div class="card ticketButton">
+                    <a href="/<%= tickets[i]._id%>" class="ticketLink"><%= tickets[i].subject %></a>
+                </div>
+                <% } %>
+            </div>
+            <div class="col card textCard">
+                <% if(selectedTicket != ""){ %>
+                    <div class="row">
+                        <div class="col">
+                            <h3><%= selectedTicket.subject %></h3><hr>
+                            <%= selectedTicket.description %> <br>
+                        </div>
+                        <div class="col-sm-auto">
+                            <%= selectedTicket.requesterEmail %> <br>
+                            <%= selectedTicket.createdAt %> <br>
+                            Category: <%= selectedTicket.category %> <br>
+                            Priority: <%= selectedTicket.priority %> <br>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
         </div>
-
-        <%try {%>
-            <%= result %>
-        <%}catch{}%>
 
 
 

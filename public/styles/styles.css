@@ -1,0 +1,27 @@
+.tickets{
+    background-color: rgb(170, 170, 170);
+    overflow-y:auto;
+    height: 90vh;
+}
+
+.ticketButton{
+    height: 40px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticketLink{
+    color: black;
+    text-decoration: none;
+}
+
+.ticketLink:hover{
+    color: black;
+    text-decoration: none;
+}
+
+.textCard{
+    margin-left: 10px;
+}

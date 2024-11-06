@@ -10,6 +10,7 @@ const { MongoClient } = require("mongodb");
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('./public/'))
 const uri = process.env.MONGO_URI;
 
 //Load Database
@@ -129,12 +130,35 @@ async function processTicket(ticketText){
 }
 
 // Web Functions
-app.get("/", function (req, res) {
+app.get("/", async (req, res) =>{
+  await client.connect();
+  
+  // Sort tickets from newest to oldest
+  let DBtickets = await tickets.aggregate([{$sort: {createdAt: -1}}]).toArray(); 
+
   res.render("index", {
+    tickets: DBtickets,
+    selectedTicket: ""
   });
 });
 
-app.post("/submitTicket/", function (req, res) {
+// Web Functions
+app.get("/:ticketID", async (req, res) =>{
+  await client.connect();
+  
+  if(ObjectId.isValid(req.params.ticketID)){
+  //Sort tickets from newest to oldest
+  let DBtickets = await tickets.aggregate([{$sort: {createdAt: -1}}]).toArray(); 
+  let selectedTicket = await tickets.findOne({"_id": new ObjectId(req.params.ticketID)}); 
+
+    res.render("index", {
+      tickets: DBtickets,
+      selectedTicket: selectedTicket
+    });
+  }
+});
+
+app.post("/submitTicket", function (req, res) {
   let subject = req.body.subject;
   let body = req.body.body;
   let email = req.body.email;
