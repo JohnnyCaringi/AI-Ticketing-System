@@ -159,7 +159,8 @@ app.get("/", async (req, res) =>{
     tickets: DBtickets,
     selectedTicket: "",
     categories: "",
-    priorities: ""
+    priorities: "",
+    selectedTicketID: 0
   });
 });
 
@@ -167,17 +168,20 @@ app.get("/", async (req, res) =>{
 app.get("/:ticketID", async (req, res) =>{
   const allCategories = await gatherCategories();
   await client.connect();
+
+  var ticketID = req.params.ticketID;
   
-  if(ObjectId.isValid(req.params.ticketID)){
+  if(ObjectId.isValid(ticketID)){
   //Sort tickets from newest to oldest
   let DBtickets = await tickets.aggregate([{$sort: {createdAt: -1}}]).toArray(); 
-  let selectedTicket = await tickets.findOne({"_id": new ObjectId(req.params.ticketID)}); 
+  let selectedTicket = await tickets.findOne({"_id": new ObjectId(ticketID)}); 
 
     res.render("index", {
       tickets: DBtickets,
       selectedTicket: selectedTicket,
       categories: allCategories,
-      priorities: allPriorities
+      priorities: allPriorities,
+      selectedTicketID: ticketID
     });
   }
 });

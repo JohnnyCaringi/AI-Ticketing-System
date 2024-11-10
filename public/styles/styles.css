@@ -12,6 +12,10 @@
     white-space: nowrap;
 }
 
+.selectedTicket{
+    background-color: rgb(220, 220, 220);
+}
+
 .ticketLink{
     color: black;
     text-decoration: none;

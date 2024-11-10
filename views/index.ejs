@@ -18,7 +18,7 @@
         <div class="container-fluid row">
             <div class="col-4 tickets">
                 <% for (var i=0; i< tickets.length; i++ ) { %>
-                <div class="card ticketButton">
+                <div class="card ticketButton overflow-hidden <% if(selectedTicketID == tickets[i]._id){%> selectedTicket <%} %>">
                     <a href="/<%= tickets[i]._id %>" class="ticketLink"><%= tickets[i].subject %></a>
                 </div>
                 <% } %>
