@@ -17,6 +17,7 @@ const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 const database = client.db('ai-ticketing-system');
 const tickets = database.collection('tickets');
+const allPriorities = ['Low', 'Medium', 'High', 'Urgent'];
 
 //Name: loadTickets
 //Description: Loads all ticket database entires into an array
@@ -26,6 +27,22 @@ async function loadTickets(){
   let ticket = await tickets.find({}).toArray();
 
   return ticket;
+}
+
+//Name: gatherCategories
+//Description: Gets all categories in the database
+//Return Value: Array of categories
+//Parameters: N/A
+async function gatherCategories(){
+  let categories = [];
+  let allTickets = await loadTickets();
+  for(let i = 0; i < allTickets.length; i++){
+    if(!categories.includes(allTickets[i].category)){
+      categories.push(allTickets[i].category);
+    }
+  }
+
+  return categories;
 }
 
 //Name: insertTicket
@@ -130,6 +147,8 @@ async function processTicket(ticketText){
 }
 
 // Web Functions
+
+// Starting endpoint
 app.get("/", async (req, res) =>{
   await client.connect();
   
@@ -138,12 +157,15 @@ app.get("/", async (req, res) =>{
 
   res.render("index", {
     tickets: DBtickets,
-    selectedTicket: ""
+    selectedTicket: "",
+    categories: "",
+    priorities: ""
   });
 });
 
-// Web Functions
+// Endpoint for individual tickets
 app.get("/:ticketID", async (req, res) =>{
+  const allCategories = await gatherCategories();
   await client.connect();
   
   if(ObjectId.isValid(req.params.ticketID)){
@@ -153,11 +175,14 @@ app.get("/:ticketID", async (req, res) =>{
 
     res.render("index", {
       tickets: DBtickets,
-      selectedTicket: selectedTicket
+      selectedTicket: selectedTicket,
+      categories: allCategories,
+      priorities: allPriorities
     });
   }
 });
 
+// Endpoint for creating a new ticket
 app.post("/submitTicket", function (req, res) {
   let subject = req.body.subject;
   let body = req.body.body;
@@ -176,6 +201,18 @@ app.post("/submitTicket", function (req, res) {
       result: AIresults[0] + " | " + AIresults[1]
     });
   })();
+});
+
+// Endpoint for updating a ticket
+app.post("/updateTicket", async (req, res) =>{
+  let category = req.body.category;
+  let priority = req.body.priority;
+  let id = req.body.ticketID;
+  await client.connect();
+
+  await tickets.updateOne({_id: new ObjectId(id)}, {$set: {category: category, priority: priority}});
+
+  res.redirect('/' + id);
 });
 
 

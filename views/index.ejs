@@ -6,6 +6,7 @@
         <title>Ticket thingy</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="/styles/styles.css">
     </head>
 
@@ -18,7 +19,7 @@
             <div class="col-4 tickets">
                 <% for (var i=0; i< tickets.length; i++ ) { %>
                 <div class="card ticketButton">
-                    <a href="/<%= tickets[i]._id%>" class="ticketLink"><%= tickets[i].subject %></a>
+                    <a href="/<%= tickets[i]._id %>" class="ticketLink"><%= tickets[i].subject %></a>
                 </div>
                 <% } %>
             </div>
@@ -32,8 +33,30 @@
                         <div class="col-sm-auto">
                             <%= selectedTicket.requesterEmail %> <br>
                             <%= selectedTicket.createdAt %> <br>
-                            Category: <%= selectedTicket.category %> <br>
-                            Priority: <%= selectedTicket.priority %> <br>
+                            <form id="ticketForm" method="POST" action="/updateTicket/">
+                                Category:
+                                <select name="category" id="category" form="ticketForm">\
+                                    <% for(var i = 0; i < categories.length; i++){ 
+                                        if(selectedTicket.category == categories[i]){%>
+                                            <option value="<%= categories[i] %>" selected><%= categories[i] %></option>
+                                        <% }else{ %>
+                                            <option value="<%= categories[i] %>"><%= categories[i] %></option>
+                                        <% } %>
+                                    <% } %>
+                                </select><br>
+                                Priority:
+                                <select name="priority" id="priority" form="ticketForm">
+                                    <% for(var i = 0; i < priorities.length; i++){ 
+                                        if(selectedTicket.priority == priorities[i]){%>
+                                            <option value="<%= priorities[i] %>" selected><%= priorities[i] %></option>
+                                        <% }else{ %>
+                                            <option value="<%= priorities[i] %>"><%= priorities[i] %></option>
+                                        <% } %>
+                                    <% } %>
+                                </select><br>
+                                <input type="hidden" name="ticketID" id="ticketID" value="<%= selectedTicket._id %>">
+                                <input type="submit" id="submit" value="Change">
+                            </form>
                         </div>
                     </div>
                 <% } %>
