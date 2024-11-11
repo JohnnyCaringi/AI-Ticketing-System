@@ -3,7 +3,7 @@
 <html lang="en" >
     <head>
         <meta charset="UTF-8">
-        <title>Ticket thingy</title>
+        <title>View Tickets</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -12,14 +12,21 @@
 
     <body>
         <header>
-            <h1>Tickets:</h1>
+            <div class="container-fluid row">
+                <div class="col">
+                    <h1>Tickets:</h1>
+                </div>
+                <div class="col">
+                    <a href="/newTicket">Create a new Ticket</a>
+                </div>
+            </div>
         </header>
 
         <div class="container-fluid row">
             <div id="tickets" class="col-4 tickets">
                 <% for (var i=0; i< tickets.length; i++ ) { %>
                 <div class="card ticketButton overflow-hidden <% if(selectedTicketID == tickets[i]._id){%> selectedTicket <%} %>">
-                    <a href="/<%= tickets[i]._id %>" id="<%= tickets[i]._id %>" class="ticketLink"><%= tickets[i].subject %></a>
+                    <a href="/ticket/<%= tickets[i]._id %>" id="<%= tickets[i]._id %>" class="ticketLink"><%= tickets[i].subject %></a>
                 </div>
                 <% } %>
             </div>
@@ -35,7 +42,8 @@
                             <%= selectedTicket.createdAt %> <br>
                             <form id="ticketForm" method="POST" action="/updateTicket/">
                                 Category:
-                                <select name="category" id="category" form="ticketForm">\
+                                <select name="category" id="category" form="ticketForm">
+                                    <option value=""> No Category </option>
                                     <% for(var i = 0; i < categories.length; i++){ 
                                         if(selectedTicket.category == categories[i]){%>
                                             <option value="<%= categories[i] %>" selected><%= categories[i] %></option>

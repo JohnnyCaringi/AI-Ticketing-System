@@ -37,7 +37,7 @@ async function gatherCategories(){
   let categories = [];
   let allTickets = await loadTickets();
   for(let i = 0; i < allTickets.length; i++){
-    if(!categories.includes(allTickets[i].category)){
+    if(!categories.includes(allTickets[i].category) && allTickets[i].category != ""){
       categories.push(allTickets[i].category);
     }
   }
@@ -165,7 +165,7 @@ app.get("/", async (req, res) =>{
 });
 
 // Endpoint for individual tickets
-app.get("/:ticketID", async (req, res) =>{
+app.get("/ticket/:ticketID", async (req, res) =>{
   const allCategories = await gatherCategories();
   await client.connect();
 
@@ -187,6 +187,11 @@ app.get("/:ticketID", async (req, res) =>{
 });
 
 // Endpoint for creating a new ticket
+app.get("/newTicket", async (req, res) =>{
+  res.sendFile(__dirname + '/public/newTicket.html');
+});
+
+// Endpoint for creating a new ticket
 app.post("/submitTicket", function (req, res) {
   let subject = req.body.subject;
   let body = req.body.body;
@@ -201,9 +206,7 @@ app.post("/submitTicket", function (req, res) {
     let priority = AIresults[1];
     await insertTicket(subject, body, priority, category, creationTime, email);
 
-    res.render("index", {
-      result: AIresults[0] + " | " + AIresults[1]
-    });
+    res.redirect('/');
   })();
 });
 
@@ -216,8 +219,10 @@ app.post("/updateTicket", async (req, res) =>{
 
   await tickets.updateOne({_id: new ObjectId(id)}, {$set: {category: category, priority: priority}});
 
-  res.redirect('/' + id);
+  res.redirect('/ticket/' + id);
 });
+
+
 
 
 app.listen(8000);
