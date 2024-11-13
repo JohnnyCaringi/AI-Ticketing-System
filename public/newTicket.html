@@ -6,29 +6,40 @@
         <title>Submit a New Ticket</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+        <link rel="stylesheet" href="/styles/styles.css">
     </head>
 
     <body>
         <header>
-            <h1>Enter your ticket:</h1>
+            <h3>Create a New Ticket <a class="navLink" href="/">View Tickets</a></h3>
+            
         </header>
 
-        <div class="container-fluid">
-            <form id="ticketForm" method="POST" action="/submitTicket/">
-                <br>
-                <label for="email">Email:</label><br>
-                <input type="text" id="email" name="email"><br>
-                <label for="subject">Ticket Subject:</label><br>
-                <input type="text" id="subject" name="subject"><br>
-                <label for="body">Ticket Body:</label><br>
-                <textarea id="body" name="body" rows="5" cols="30"></textarea>
-                <input type="submit" id="submit" value="Submit Ticket">
-            </form>
+        <div id="newTicketPage">
+            <h4>Ticket:</h4>
+            <div class="container-fluid">
+                <form id="ticketForm" method="POST" action="/submitTicket/">
+                    <label for="email">Email:</label><br>
+                    <input type="text" id="email" name="email"><br>
+                    <label for="subject">Ticket Subject:</label><br>
+                    <input type="text" id="subject" name="subject"><br>
+                    <label for="body">Ticket Body:</label><br>
+                    <textarea id="body" name="body" rows="5" cols="30"></textarea><br><br>
+                    <input type="submit" id="submit" value="Submit Ticket">
+                </form>
+            </div>
+            <br>
+            <p>Tickets take a long time to submit since free render.com is slow</p><br>
+
+            
+
         </div>
-        <p>Tickets take a long time to submit since free render.com is slow</p><br>
 
-        <a href="/">View Tickets</a>
-
+        <footer>
+            Created by John (Johnny) Caringi Jr. | 
+            <a href="https://github.com/JohnnyCaringi/AI-Ticketing-System">Visit Repo</a> | 
+            <a href="https://huggingface.co/datasets/Console-AI/IT-helpdesk-synthetic-tickets">Original Dataset</a>
+        </footer>
 
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js'></script>

@@ -1,19 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+body{
+    background-color: rgb(240, 240, 240);
+}
+
+p{
+    font-family: "Noto Sans", sans-serif;
+    padding-left: 5px;
+    white-space: nowrap;
+}
+
+h3{
+    font-family: "Noto Sans", sans-serif;
+    color: white;
+    padding-left: 5px;
+}
+
+h4{
+    font-family: "Noto Sans", sans-serif;
+    padding-left: 10px;
+    color: #212529;
+}
+
+header{
+    height: 5vh;
+    background-color: #135b8f;
+    font-family: "Noto Sans", sans-serif;
+}
+
+footer{
+    font-family: "Noto Sans", sans-serif;
+    height: 3vh;
+    background-color: #135b8f;
+    color: white;
+    padding-left: 5px;
+}
+
+a{
+    color:white;
+}
+
+a:hover{
+    color: rgb(210, 210, 210);
+}
+
+label{
+    font-family: "Noto Sans", sans-serif;
+}
+
+input{
+    font-family: "Noto Sans", sans-serif;
+    color: #212529;
+}
+
+textarea{
+    resize: none;
+    width: 500px;
+    height: 200px;
+    font-family: "Noto Sans", sans-serif;
+    color: #212529;
+}
+
+hr{
+    color:rgb(180, 180, 180);
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+select{
+    background-color: rgb(240, 240, 240);
+    border: none;
+    margin-top: 10px;
+}
+
+option{
+    font-family: "Noto Sans", sans-serif;
+}
+
+#newTicketPage{
+    height: 92vh;
+}
+
+#logo{
+    color: white;
+    font-family: "Oswald", sans-serif;
+    font-weight: 600;
+    font-size: 25px;
+}
+
+#submit{
+    font-family: "Noto Sans", sans-serif;
+    background-color: #135b8f;
+    border: solid 2px;
+    border-color: rgb(210, 210, 210);
+    color: white;
+    padding: 5px 20px;
+}
+
+.ticketSubject{
+    color: #212529;
+    padding-left: 0px;
+}
+
+.navLink{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    margin-left: 100px;
+}
+
 .tickets{
-    background-color: rgb(170, 170, 170);
+    font-family: "Noto Sans", sans-serif;
     overflow-y:auto;
-    height: 90vh;
+    height: 92vh;
 }
 
 .ticketButton{
+    font-size: 17px;
     height: 40px;
     margin-bottom: 5px;
     margin-top: 5px;
-    overflow: hidden;
+    padding-left: 5px;
     white-space: nowrap;
 }
 
 .selectedTicket{
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(230, 230, 230);
 }
 
 .ticketLink{
@@ -27,5 +140,6 @@
 }
 
 .textCard{
+    font-family: "Noto Sans", sans-serif;
     margin-left: 10px;
 }
