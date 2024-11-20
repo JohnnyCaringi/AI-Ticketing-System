@@ -192,22 +192,19 @@ app.get("/newTicket", async (req, res) =>{
 });
 
 // Endpoint for creating a new ticket
-app.post("/submitTicket", function (req, res) {
+app.post("/submitTicket", async (req, res) =>{
   let subject = req.body.subject;
   let body = req.body.body;
   let email = req.body.email;
   let ticketText = subject + " " + body;
   let creationTime = new Date();
 
+  AIresults = await processTicket(ticketText);
+  let category = AIresults[0];
+  let priority = AIresults[1];
+  await insertTicket(subject, body, priority, category, creationTime, email);
 
-  (async()=>{
-    AIresults = await processTicket(ticketText);
-    let category = AIresults[0];
-    let priority = AIresults[1];
-    await insertTicket(subject, body, priority, category, creationTime, email);
-
-    res.redirect('/');
-  })();
+  res.redirect('/');
 });
 
 // Endpoint for updating a ticket
