@@ -1,20 +1,22 @@
-=Sample Hardware Issue=
+=Network Issue=
 
-NFC tag won't work
+Can't connect to VPN
 
-Good morning,
-I just received my NFC tag to enter the building but it doesn't scan. Do you think you could help me before the work day is over?
+Good morning IT staff, 
+I am unable to connect to my VPN. I get an error when trying to connect and it wont let me in. Can you please help me at your earliest convenience? 
+Thanks! 
 
 -----------------------------------------------------------------------------------------------------------------------------------------
-=Sample Software Issue=
+=Hardware Issue=
 
-URGENT: Photoshop crashing
+Monitor won't work
 
-Dear Support Team, Photoshop crashes unexpectedly whenever I try to export a photo. This is very urgent to me as I have a strict project deadline to meet and my job may be at risk. Could you help me fix this as soon as possible?
+IT Staff, 
+When turning my computer on my monitor stays black and won't show my desktop. I have tried turning it off and on again but it won't fix it. Can I please have some assistance? 
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 =Completely Unexpected Issue=
 
-Broken laptop
+Someone ate my food
 
-I accidentally dropped my laptop in the bathtub while working and I think it is broken. Is there a way to fix this or can I have a new laptop? I need a working laptop to get any work done.
+ Hello, Someone ate my food in the break room. Someone NEEDS to get to the bottom of this!!! 
